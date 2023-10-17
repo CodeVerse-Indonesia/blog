@@ -1,16 +1,17 @@
 "use client";
-
-import { useState } from "react";
-import styles from "./authLinks.module.css";
 import Link from "next/link";
+import styles from "./authLinks.module.css";
+import { useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 
 const AuthLinks = () => {
   const [open, setOpen] = useState(false);
-  // sementara
-  const status = "notauthenticated";
+
+  const { status } = useSession();
+
   return (
     <>
-      {status == "notauthenticated" ? (
+      {status === "unauthenticated" ? (
         <Link href="/login" className={styles.link}>
           Masuk
         </Link>
@@ -19,7 +20,9 @@ const AuthLinks = () => {
           <Link href="/write" className={styles.link}>
             Tulis
           </Link>
-          <span className={styles.link}>Keluar</span>
+          <span className={styles.link} onClick={signOut}>
+            Keluar
+          </span>
         </>
       )}
       <div className={styles.burger} onClick={() => setOpen(!open)}>
@@ -32,12 +35,12 @@ const AuthLinks = () => {
           <Link href="/">Homepage</Link>
           <Link href="/">Tentang</Link>
           <Link href="/">Kontak</Link>
-          {status == "notauthenticated" ? (
+          {status === "notauthenticated" ? (
             <Link href="/login">Masuk</Link>
           ) : (
             <>
               <Link href="/write">Tulis</Link>
-              <span>Keluar</span>
+              <span className={styles.link}>Keluar</span>
             </>
           )}
         </div>
